@@ -6,18 +6,17 @@
 <meta name="theme-color" content="#0A0B0F">
 
 <!-- ============================================================
-     SEO — update the canonical/OG URLs after you pick a domain
+     SEO — replace the URLs once the domain is chosen
      ============================================================ -->
 <title>Faizan Tariq — Operations &amp; Business Systems Analyst</title>
-<meta name="description" content="Faizan Tariq is an industrial engineer and operations &amp; business systems analyst in Islamabad, Pakistan. He runs POS, payroll and inventory systems for 59 restaurant locations, reports on 350 US dealerships, and builds ERPNext, Jira and n8n workflows.">
+<meta name="description" content="Faizan Tariq is an industrial engineer and operations &amp; business systems analyst based in Islamabad, Pakistan. He runs POS, payroll and inventory systems across 59 live restaurant locations, delivers daily financial reporting for 350 automotive dealerships, and builds ERPNext, Jira and n8n workflows that cut manual effort.">
 <meta name="author" content="Faizan Tariq">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://your-username.github.io/faizan-tariq-portfolio/">
 
-<!-- Open Graph -->
 <meta property="og:type" content="profile">
 <meta property="og:title" content="Faizan Tariq — Operations &amp; Business Systems Analyst">
-<meta property="og:description" content="Industrial engineer running multi-site operations systems: POS and payroll for 59 restaurant locations, financial reporting for 350 US dealerships, ERPNext rollouts and n8n automation.">
+<meta property="og:description" content="Industrial engineer running multi-site operations systems: POS and payroll across 59 restaurant locations, reporting for 350 dealerships, ERPNext rollouts and automation that cut approval cycles by 40%.">
 <meta property="og:url" content="https://your-username.github.io/faizan-tariq-portfolio/">
 <meta property="og:image" content="https://your-username.github.io/faizan-tariq-portfolio/assets/img/og-image.png">
 <meta property="og:image:width" content="1200">
@@ -27,25 +26,22 @@
 <meta property="profile:first_name" content="Faizan">
 <meta property="profile:last_name" content="Tariq">
 
-<!-- Twitter / X -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Faizan Tariq — Operations &amp; Business Systems Analyst">
 <meta name="twitter:description" content="Industrial engineer running multi-site operations systems, ERP rollouts and reporting automation.">
 <meta name="twitter:image" content="https://your-username.github.io/faizan-tariq-portfolio/assets/img/og-image.png">
 
-<!-- Icons + manifest -->
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 <link rel="manifest" href="site.webmanifest">
 
-<!-- Fonts: one request, swap so text paints immediately -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@400;500&display=swap">
+<link rel="preload" as="image" href="assets/img/faizan.webp" type="image/webp">
 
 <link rel="stylesheet" href="styles.css">
 
-<!-- Structured data: helps recruiters' tooling and search understand the profile -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -55,8 +51,9 @@
   "email": "mailto:ftariq377@gmail.com",
   "telephone": "+923335566750",
   "url": "https://your-username.github.io/faizan-tariq-portfolio/",
-  "address": { "@type": "PostalAddress", "addressLocality": "Islamabad", "addressCountry": "PK" },
+  "image": "https://your-username.github.io/faizan-tariq-portfolio/assets/img/faizan.png",
   "sameAs": ["https://www.linkedin.com/in/faizan-tariq-59b028254"],
+  "address": { "@type": "PostalAddress", "addressLocality": "Islamabad", "addressCountry": "PK" },
   "alumniOf": { "@type": "CollegeOrUniversity", "name": "Özyeğin University", "address": "Istanbul, Türkiye" },
   "knowsLanguage": ["English", "Urdu", "Turkish"],
   "knowsAbout": ["Operations Management", "Business Systems Analysis", "ERPNext", "Point-of-Sale Systems",
@@ -69,9 +66,7 @@
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
 
-<!-- ============================================================
-     BOOT — short system-check overlay, skipped for reduced motion
-     ============================================================ -->
+<!-- Boot: short system check, skipped for reduced motion -->
 <div class="boot" id="boot" aria-hidden="true">
   <div class="boot__inner">
     <span class="boot__mark">FT</span>
@@ -80,7 +75,6 @@
   </div>
 </div>
 
-<!-- Custom cursor (desktop, fine-pointer only) -->
 <div class="cursor" id="cursor" aria-hidden="true"><span class="cursor__dot"></span><span class="cursor__ring"></span></div>
 
 <!-- ============================================================
@@ -96,14 +90,23 @@
     <span class="nav__name">Faizan&nbsp;Tariq</span>
   </a>
 
-  <nav class="nav__links" aria-label="Section navigation">
-    <a href="#about">About</a>
-    <a href="#skills">Skills</a>
+  <nav class="nav__links" id="navLinks" aria-label="Section navigation">
+    <a href="#profile">Profile</a>
+    <a href="#systems">Systems</a>
+    <a href="#approach">Approach</a>
+    <a href="#skills">Capability</a>
     <a href="#experience">Experience</a>
-    <a href="#work">Work</a>
+    <a href="#work">Case studies</a>
     <a href="#education">Education</a>
     <a href="#contact">Contact</a>
   </nav>
+
+  <button class="palette-trigger mono" id="paletteTrigger" aria-label="Open quick navigation">
+    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
+    </svg>
+    <span class="palette-trigger__key">⌘K</span>
+  </button>
 
   <a class="btn btn--sm magnetic" href="assets/resume/Faizan-Tariq-Resume.pdf" download>
     <span>Resume</span>
@@ -117,7 +120,7 @@
   </button>
 </header>
 
-<!-- Fixed instrument rail: section index + live readout -->
+<!-- Instrument rail: section index + scroll meter -->
 <aside class="rail" id="rail" aria-hidden="true">
   <span class="rail__label mono">SECTION</span>
   <ol class="rail__list mono" id="railList"></ol>
@@ -127,7 +130,7 @@
 <main id="main">
 
 <!-- ============================================================
-     HERO — signature element: live systems graph
+     HERO
      ============================================================ -->
 <section class="hero" id="top">
   <canvas class="hero__canvas" id="graph" aria-hidden="true"></canvas>
@@ -135,7 +138,7 @@
 
   <div class="hero__content">
     <p class="eyebrow mono reveal">
-      <span class="dot" aria-hidden="true"></span>Islamabad, PK — available for operations &amp; systems roles
+      <span class="dot" aria-hidden="true"></span>Open to new roles · delivering across US, European and Asian time zones
     </p>
 
     <h1 class="hero__title">
@@ -145,13 +148,13 @@
     </h1>
 
     <p class="hero__lede reveal">
-      I'm <strong>Faizan Tariq</strong>, an industrial engineer working as an operations and business
+      I'm <strong>Faizan Tariq</strong> — an industrial engineer working as an operations and business
       systems analyst. I keep POS, payroll, inventory and reporting systems running across dozens of
-      live sites — then rebuild the workflow so it runs with less manual effort.
+      live sites, then rebuild the workflow so it runs with less manual effort.
     </p>
 
     <div class="hero__cta reveal">
-      <a class="btn btn--primary magnetic" href="#work"><span>See the work</span></a>
+      <a class="btn btn--primary magnetic" href="#work"><span>See the case studies</span></a>
       <a class="btn magnetic" href="assets/resume/Faizan-Tariq-Resume.pdf" download>
         <span>Download resume</span>
         <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
@@ -162,7 +165,7 @@
 
     <dl class="hero__stats reveal">
       <div><dt>Live restaurant locations supported</dt><dd class="mono"><span data-count="59">59</span></dd></div>
-      <div><dt>US dealerships in daily reporting</dt><dd class="mono"><span data-count="350">350</span></dd></div>
+      <div><dt>Dealerships in daily reporting</dt><dd class="mono"><span data-count="350">350</span></dd></div>
       <div><dt>Drop in open support tickets</dt><dd class="mono"><span data-count="52">52</span>%</dd></div>
       <div><dt>Faster approval cycle time</dt><dd class="mono"><span data-count="40">40</span>%</dd></div>
     </dl>
@@ -172,9 +175,9 @@
 </section>
 
 <!-- ============================================================
-     ABOUT
+     01 PROFILE
      ============================================================ -->
-<section class="section" id="about" data-rail="About">
+<section class="section" id="profile" data-rail="Profile">
   <div class="section__head">
     <span class="tag mono">01 — Profile</span>
     <h2 class="h2">Trained to model systems.<br>Employed to make them work.</h2>
@@ -183,54 +186,140 @@
   <div class="about">
     <div class="about__body">
       <p class="lead">
-        I studied industrial engineering at Özyeğin University in Istanbul on a 40% scholarship, with
-        specialisations in finance, manufacturing and service operations management, and transportation
-        and logistics. The degree gave me the modelling half of the job — simulation, optimisation,
-        process design. Everything since has been the other half: running real operations where the
-        data is messy, the sites are live, and someone is waiting on a payroll run.
+        Industrial engineering at Özyeğin University gave me the modelling half of the job —
+        simulation, optimisation, process design. Every role since has been the other half: running
+        real operations where the data is messy, the sites are live, and someone is waiting on a
+        payroll run.
       </p>
       <p>
-        Today I sit between operations, product and engineering at a restaurant technology platform,
-        supporting POS, kiosk, digital ordering, menu, payment, payroll, inventory and marketing across
-        59 live locations for California-based brands, on US time zones. In parallel I produce daily
-        financial and invoice reporting for a co-op reimbursement business serving 350 US automotive
-        dealerships.
+        I sit between operations, product and engineering at a restaurant technology platform,
+        supporting POS, kiosk, digital ordering, menu, payment, payroll, inventory and marketing
+        across 59 live locations. In parallel I produce daily financial and invoice reporting for a
+        co-op reimbursement business serving 350 US automotive dealerships.
       </p>
       <p>
-        The pattern across every role is the same: learn the system properly, find where the time is
-        actually being lost, and replace the manual step with something that reports itself — a Jira
-        dashboard, a payroll tracker, an n8n approval flow, a forecast built into the client's own
-        reporting.
+        Before that: an ERPNext rollout end to end, and eight months leading a ten-person delivery
+        team. The through-line is consistent — learn the system properly, find where the time is
+        actually lost, and replace the manual step with something that reports itself.
       </p>
     </div>
 
-    <aside class="about__facts">
-      <h3 class="facts__title mono">At a glance</h3>
+    <aside class="about__side">
+      <figure class="portrait" id="portrait">
+        <span class="portrait__halo" aria-hidden="true"></span>
+        <span class="portrait__ring" aria-hidden="true"></span>
+        <span class="portrait__arc" aria-hidden="true">
+          <svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="95"/></svg>
+        </span>
+        <picture>
+          <source srcset="assets/img/faizan.webp" type="image/webp">
+          <img src="assets/img/faizan.png" alt="Faizan Tariq" width="640" height="640"
+               loading="lazy" decoding="async">
+        </picture>
+      </figure>
+
       <ul class="facts">
         <li><span class="mono">Role</span><b>Operations &amp; Business Systems Analyst</b></li>
-        <li><span class="mono">Base</span><b>Islamabad, Pakistan</b></li>
-        <li><span class="mono">Markets</span><b>United States · Pakistan · Türkiye</b></li>
         <li><span class="mono">Degree</span><b>BSc Industrial Engineering</b></li>
-        <li><span class="mono">Team led</span><b>10 direct reports</b></li>
-        <li><span class="mono">Languages</span><b>English (IELTS 7.5) · Urdu · Turkish (basic)</b></li>
-        <li><span class="mono">Open to</span><b>Relocation — Dubai / GCC</b></li>
+        <li><span class="mono">Teams</span><b>Led 10 direct reports</b></li>
+        <li><span class="mono">Based</span><b>Islamabad, Pakistan</b></li>
+        <li><span class="mono">Markets</span><b>United States · Pakistan · Türkiye</b></li>
+        <li><span class="mono">Languages</span><b>English (IELTS 7.5) · Urdu · Turkish</b></li>
       </ul>
     </aside>
   </div>
 </section>
 
+
 <!-- ============================================================
-     SKILLS — 3D tag sphere + categorised list (list is the a11y source of truth)
+     02 SYSTEMS — interactive 3D stack of the modules I keep running
      ============================================================ -->
-<section class="section" id="skills" data-rail="Skills">
+<section class="section" id="systems" data-rail="Systems">
   <div class="section__head">
-    <span class="tag mono">02 — Capability</span>
+    <span class="tag mono">02 — In production</span>
+    <h2 class="h2">Applied skills.<br>Layer by layer.</h2>
+    <p class="section__note">Every layer below is live in production right now. Tap or hover a layer to isolate it.</p>
+  </div>
+
+  <div class="stack">
+    <div class="stack__scene" id="stackScene" aria-hidden="true">
+      <div class="plate" data-layer="marketing"><span class="plate__tag mono">Marketing</span></div>
+      <div class="plate" data-layer="inventory"><span class="plate__tag mono">Inventory</span></div>
+      <div class="plate" data-layer="payroll"><span class="plate__tag mono">Payroll</span></div>
+      <div class="plate" data-layer="payments"><span class="plate__tag mono">Payments</span></div>
+      <div class="plate" data-layer="menu"><span class="plate__tag mono">Menu</span></div>
+      <div class="plate" data-layer="ordering"><span class="plate__tag mono">Digital ordering</span></div>
+      <div class="plate" data-layer="kiosk"><span class="plate__tag mono">Kiosk</span></div>
+      <div class="plate plate--base" data-layer="pos"><span class="plate__tag mono">Point of sale</span></div>
+    </div>
+
+    <ul class="stack__legend" id="stackLegend">
+      <li><button type="button" data-layer="pos"><span class="mono">01</span><b>Point of sale</b><i>The base layer every other system reads from.</i></button></li>
+      <li><button type="button" data-layer="kiosk"><span class="mono">02</span><b>Kiosk</b><i>Self-serve ordering hardware in-store.</i></button></li>
+      <li><button type="button" data-layer="ordering"><span class="mono">03</span><b>Digital ordering</b><i>Online and app orders flowing into the same queue.</i></button></li>
+      <li><button type="button" data-layer="menu"><span class="mono">04</span><b>Menu</b><i>Items, pricing and availability, kept in sync per brand.</i></button></li>
+      <li><button type="button" data-layer="payments"><span class="mono">05</span><b>Payments</b><i>Transaction flow and settlement issues.</i></button></li>
+      <li><button type="button" data-layer="payroll"><span class="mono">06</span><b>Payroll</b><i>19 restaurants, centralised into one dashboard.</i></button></li>
+      <li><button type="button" data-layer="inventory"><span class="mono">07</span><b>Inventory</b><i>Stock counts and supply coordination.</i></button></li>
+      <li><button type="button" data-layer="marketing"><span class="mono">08</span><b>Marketing</b><i>Campaign and promotion operations.</i></button></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============================================================
+     03 APPROACH — personal brand, four operating principles
+     ============================================================ -->
+<section class="section" id="approach" data-rail="Approach">
+  <div class="section__head">
+    <span class="tag mono">03 — Approach</span>
+    <h2 class="h2">Four rules I actually work by.</h2>
+    <p class="section__note">Each one came out of a specific job, not a management book.</p>
+  </div>
+
+  <ol class="principles">
+    <li class="principle">
+      <span class="principle__no mono">01</span>
+      <h3>Learn the system before touching it.</h3>
+      <p>On the ERPNext rollout I ran data migration, UAT and system testing before proposing a single
+        change. Understanding inventory, stock, payroll, permissions and workflow controls first is
+        what made the automation safe to ship.</p>
+      <span class="principle__src mono">OneScreen · ERPNext</span>
+    </li>
+    <li class="principle">
+      <span class="principle__no mono">02</span>
+      <h3>Make the work report itself.</h3>
+      <p>A queue nobody can see gets worked by whoever shouts loudest. Dashboards for support tickets
+        and payroll runs replaced the chasing — the status is visible without anyone having to ask.</p>
+      <span class="principle__src mono">AIO APP · Jira &amp; payroll</span>
+    </li>
+    <li class="principle">
+      <span class="principle__no mono">03</span>
+      <h3>Automate the step people dread.</h3>
+      <p>Approvals were the bottleneck, so that's where the n8n and Python workflow went — plus server
+        scripts for deadlines, reminders and missing-document checks. Cycle time dropped 40%.</p>
+      <span class="principle__src mono">OneScreen · n8n + Python</span>
+    </li>
+    <li class="principle">
+      <span class="principle__no mono">04</span>
+      <h3>Ship it where it's used.</h3>
+      <p>An ordering interface only counts once it's integrated into the POS and taking real orders in
+        a real restaurant. Built with product managers and developers, deployed to six live sites.</p>
+      <span class="principle__src mono">AIO APP · POS integration</span>
+    </li>
+  </ol>
+</section>
+
+<!-- ============================================================
+     04 CAPABILITY
+     ============================================================ -->
+<section class="section" id="skills" data-rail="Capability">
+  <div class="section__head">
+    <span class="tag mono">04 — Capability</span>
     <h2 class="h2">The stack I actually work in.</h2>
     <p class="section__note">Ordered by how much of my working week each one takes — not by a self-assessed percentage.</p>
   </div>
 
   <div class="skills">
-    <!-- Interactive sphere: decorative duplicate of the list beside it -->
     <div class="sphere" id="sphere" role="img" aria-label="Rotating cloud of tools and skills, listed in full alongside">
       <div class="sphere__stage" id="sphereStage"></div>
       <span class="sphere__hint mono">drag to rotate</span>
@@ -279,12 +368,12 @@
 </section>
 
 <!-- ============================================================
-     EXPERIENCE — scroll-driven timeline
+     05 EXPERIENCE
      ============================================================ -->
 <section class="section" id="experience" data-rail="Experience">
   <div class="section__head">
-    <span class="tag mono">03 — Track record</span>
-    <h2 class="h2">Six roles, three countries,<br>one job: make it run.</h2>
+    <span class="tag mono">05 — Track record</span>
+    <h2 class="h2">Six roles. One job:<br>make it run.</h2>
   </div>
 
   <ol class="timeline" id="timeline">
@@ -292,7 +381,7 @@
       <span class="tl__node" aria-hidden="true"></span>
       <div class="tl__meta">
         <span class="tl__date mono">Oct 2025 — Present</span>
-        <span class="tl__place mono">Islamabad, PK · US hours</span>
+        <span class="tl__place mono">Islamabad, PK · US time zones</span>
       </div>
       <div class="tl__card">
         <header>
@@ -301,10 +390,10 @@
         </header>
         <ul>
           <li>Support POS, kiosk, digital ordering, menu, payment, payroll, inventory and marketing operations across <b>59 live restaurant locations</b> for multiple California-based brands, working across US time zones.</li>
-          <li>Built a live Jira dashboard tracking bugs and feature requests by priority, status, module, product and assignee, enabling priority-based resolution by developers — <b>open tickets fell 52%, from 350 to 168</b>, between February and June 2026.</li>
-          <li>Developed an internal payroll dashboard using Claude Code for 19 restaurants, centralising pay cycles, paydays, approval deadlines, statuses and time-zone conversions; reporting showed <b>95% of payroll runs completed on schedule</b>.</li>
-          <li>Designed and developed a live pizza-ordering interface with real-time visual configuration and dynamic order summaries, deployed at six locations after POS integration with product managers and developers.</li>
-          <li>Coordinate issue resolution and workflow standardisation across Product, Engineering, Inventory, Finance, Automation and Onboarding; onboarded and trained three interns.</li>
+          <li>Built a live Jira dashboard tracking bugs and feature requests by priority, status, module, product and assignee — <b>open tickets fell 52%, from 350 to 168</b>, between February and June 2026.</li>
+          <li>Developed an internal payroll dashboard using Claude Code for 19 restaurants, centralising pay cycles, paydays, approval deadlines, statuses and time-zone conversions; <b>95% of payroll runs completed on schedule</b>.</li>
+          <li>Designed and developed a live pizza-ordering interface with real-time visual configuration and dynamic order summaries, deployed at six locations after POS integration.</li>
+          <li>Coordinate resolution and workflow standardisation across Product, Engineering, Inventory, Finance, Automation and Onboarding; trained three interns.</li>
         </ul>
         <p class="tl__stack mono">Jira · POS systems · Claude Code · Dashboard development</p>
       </div>
@@ -314,7 +403,7 @@
       <span class="tl__node" aria-hidden="true"></span>
       <div class="tl__meta">
         <span class="tl__date mono">Nov 2025 — Present</span>
-        <span class="tl__place mono">Remote — US client</span>
+        <span class="tl__place mono">Remote · US client</span>
       </div>
       <div class="tl__card">
         <header>
@@ -322,9 +411,9 @@
           <p class="tl__org">Coopable <span>Automotive co-op reimbursement services</span></p>
         </header>
         <ul>
-          <li>Produce and validate <b>8–10 daily Excel-based financial and invoice reports</b> covering billing, payments, claims and marketing funds for <b>350 US automotive dealerships</b>.</li>
+          <li>Produce and validate <b>8–10 daily Excel-based financial and invoice reports</b> covering billing, payments, claims and marketing funds for <b>350 US automotive dealerships</b> in the co-op reimbursement sector.</li>
           <li>Maintain near-100% on-time report completion when source data is available, reconciling reports and resolving discrepancies, variances and data-quality issues before submission.</li>
-          <li>Introduced forecasting into client reporting using XLOOKUP, SUMIF, charts and moving averages, projecting claims submissions and available marketing funds; the strengthened reporting supported retention and onboarding through a <b>38% expansion of the dealership base</b> between January and March 2026.</li>
+          <li>Introduced forecasting into client reporting using XLOOKUP, SUMIF, charts and moving averages; the strengthened reporting supported retention and onboarding through a <b>38% expansion of the dealership base</b>.</li>
           <li>Document reporting and billing workflows to strengthen consistency, knowledge transfer and operational control.</li>
         </ul>
         <p class="tl__stack mono">Advanced Excel · Forecasting · Data validation · Reconciliation</p>
@@ -343,7 +432,7 @@
           <p class="tl__org">OneScreen <span>Interactive display technology</span></p>
         </header>
         <ul>
-          <li>Supported a production ERPNext rollout for five supply-chain users under senior-manager oversight, covering inventory, stock, payroll, roles and permissions, shipping, tracking and workflow controls.</li>
+          <li>Supported a production ERPNext rollout for five supply-chain users, covering inventory, stock, payroll, roles and permissions, shipping, tracking and workflow controls.</li>
           <li>Completed data migration, formal UAT, system testing, rollout support and user training; configured and tested server scripts for deadlines, reminders, submissions and missing-document checks.</li>
           <li>Built an n8n and Python approval workflow that <b>improved cycle time by 40%</b>, cutting manual processing from roughly five hours to one to three.</li>
           <li>Coordinated five vendors across regions at <b>95% on-time delivery</b>; maintained Shopify catalogues for US online ordering.</li>
@@ -365,7 +454,7 @@
         </header>
         <ul>
           <li>Led daily service delivery for a US-focused career-services business supporting <b>62 active clients</b> across LinkedIn, CV development, networking and wider career support.</li>
-          <li>Managed <b>10 direct reports</b> and introduced workload allocation, KPI monitoring and weekly reporting through GoHighLevel and Hubstaff — <b>client-handling productivity up 32%</b> between March and June 2025.</li>
+          <li>Managed <b>10 direct reports</b> and introduced workload allocation, KPI monitoring and weekly reporting through GoHighLevel and Hubstaff — <b>client-handling productivity up 32%</b>.</li>
           <li>Reduced operating expenses by <b>15%</b> by eliminating redundant software subscriptions and tightening spending controls.</li>
           <li>Improved service quality and turnaround through capacity planning, quality checks, client coordination and issue resolution.</li>
         </ul>
@@ -377,7 +466,7 @@
       <span class="tl__node" aria-hidden="true"></span>
       <div class="tl__meta">
         <span class="tl__date mono">May 2024 — Aug 2024</span>
-        <span class="tl__place mono">Istanbul, TR</span>
+        <span class="tl__place mono">Istanbul, Türkiye</span>
       </div>
       <div class="tl__card">
         <header>
@@ -411,50 +500,175 @@
 </section>
 
 <!-- ============================================================
-     WORK / PROJECTS
+     06 CASE STUDIES
      ============================================================ -->
-<section class="section" id="work" data-rail="Work">
+<section class="section" id="work" data-rail="Case studies">
   <div class="section__head">
-    <span class="tag mono">04 — Built</span>
-    <h2 class="h2">Things I built because<br>the manual version wasn't holding.</h2>
-    <p class="section__note">All internal systems built inside client or employer environments, so there are no public URLs. Happy to walk through any of them in detail.</p>
+    <span class="tag mono">06 — Case studies</span>
+    <h2 class="h2">Three problems,<br>and what changed.</h2>
+    <p class="section__note">Built inside client and employer environments, so there are no public URLs. Open any one for the full story.</p>
   </div>
 
+  <div class="cases" id="cases">
+
+    <!-- CASE 01 -->
+    <article class="case is-open">
+      <button class="case__head" aria-expanded="true" aria-controls="case1">
+        <span class="case__no mono">01</span>
+        <span class="case__titles">
+          <span class="case__title">A support queue nobody could see</span>
+          <span class="case__org mono">AIO APP · Jira operations dashboard</span>
+        </span>
+        <span class="case__head-metric mono"><b>−52%</b> open tickets</span>
+        <span class="case__chev" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        </span>
+      </button>
+      <div class="case__panel" id="case1">
+        <div class="case__inner">
+          <div class="case__story">
+            <div class="case__block">
+              <span class="mono">Context</span>
+              <p>Bugs and feature requests arrived from 59 live California locations across POS, kiosk, ordering, payroll and inventory. With no single view of the queue, work got picked up by whoever escalated hardest rather than by what mattered most.</p>
+            </div>
+            <div class="case__block">
+              <span class="mono">What I did</span>
+              <p>Built a live Jira dashboard tracking every bug and feature request by priority, status, module, product and assignee, so developers could resolve strictly by priority — and so the backlog's real shape was visible to everyone at once.</p>
+            </div>
+            <div class="case__block">
+              <span class="mono">Result</span>
+              <p>Open tickets fell from 350 to 168 between February and June 2026 — a 52% reduction, with resolution driven by priority rather than volume of complaint.</p>
+            </div>
+          </div>
+          <div class="case__panel-side">
+            <div class="ba" data-before="350" data-after="168" data-unit="tickets">
+              <span class="ba__label mono">Open tickets</span>
+              <div class="ba__row">
+                <span class="ba__tag mono">Before</span>
+                <span class="ba__bar"><i class="ba__fill ba__fill--before"></i></span>
+                <b class="ba__val mono">350</b>
+              </div>
+              <div class="ba__row">
+                <span class="ba__tag mono">After</span>
+                <span class="ba__bar"><i class="ba__fill ba__fill--after"></i></span>
+                <b class="ba__val mono">168</b>
+              </div>
+              <span class="ba__delta mono">Feb → Jun 2026</span>
+            </div>
+            <p class="case__stack mono">Jira · Dashboard design · Priority triage · Cross-team workflow</p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- CASE 02 -->
+    <article class="case">
+      <button class="case__head" aria-expanded="false" aria-controls="case2">
+        <span class="case__no mono">02</span>
+        <span class="case__titles">
+          <span class="case__title">Five hours of approvals, every time</span>
+          <span class="case__org mono">OneScreen · n8n + Python workflow</span>
+        </span>
+        <span class="case__head-metric mono"><b>−40%</b> cycle time</span>
+        <span class="case__chev" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        </span>
+      </button>
+      <div class="case__panel" id="case2">
+        <div class="case__inner">
+          <div class="case__story">
+            <div class="case__block">
+              <span class="mono">Context</span>
+              <p>During a production ERPNext rollout, approvals were the bottleneck in the supply-chain process — roughly five hours of manual handling per cycle, with deadlines and missing documents tracked by memory.</p>
+            </div>
+            <div class="case__block">
+              <span class="mono">What I did</span>
+              <p>Built an approval workflow in n8n and Python, and configured and tested server scripts covering deadlines, reminders, submissions and missing-document checks. Delivered alongside data migration, formal UAT, system testing and user training for five supply-chain users.</p>
+            </div>
+            <div class="case__block">
+              <span class="mono">Result</span>
+              <p>Cycle time improved by 40% — manual processing dropped from about five hours to one to three. Vendor coordination across five regional suppliers held at 95% on-time delivery.</p>
+            </div>
+          </div>
+          <div class="case__panel-side">
+            <div class="race" id="race">
+              <span class="race__label mono">Approval cycle — press run</span>
+              <div class="race__lane">
+                <span class="race__tag mono">Manual</span>
+                <span class="race__track"><i class="race__fill race__fill--manual"></i></span>
+                <b class="race__time mono" data-lane="manual">0.0h</b>
+              </div>
+              <div class="race__lane">
+                <span class="race__tag mono">n8n</span>
+                <span class="race__track"><i class="race__fill race__fill--auto"></i></span>
+                <b class="race__time mono" data-lane="auto">0.0h</b>
+              </div>
+              <button class="race__run mono" type="button">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+                Run comparison
+              </button>
+            </div>
+            <p class="case__stack mono">ERPNext · n8n · Python · Server scripts · UAT</p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- CASE 03 -->
+    <article class="case">
+      <button class="case__head" aria-expanded="false" aria-controls="case3">
+        <span class="case__no mono">03</span>
+        <span class="case__titles">
+          <span class="case__title">Nineteen payrolls, nineteen calendars</span>
+          <span class="case__org mono">AIO APP · Payroll dashboard</span>
+        </span>
+        <span class="case__head-metric mono"><b>95%</b> runs on schedule</span>
+        <span class="case__chev" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        </span>
+      </button>
+      <div class="case__panel" id="case3">
+        <div class="case__inner">
+          <div class="case__story">
+            <div class="case__block">
+              <span class="mono">Context</span>
+              <p>Nineteen restaurants, each with its own pay cycle, payday, approval deadline and time zone. Keeping them straight depended on remembering which state every location was in — which is exactly the kind of thing that fails on a busy week.</p>
+            </div>
+            <div class="case__block">
+              <span class="mono">What I did</span>
+              <p>Built an internal payroll dashboard using Claude Code, centralising pay cycles, paydays, approval deadlines, run statuses and time-zone conversions into a single view with the state of every location visible at a glance.</p>
+            </div>
+            <div class="case__block">
+              <span class="mono">Result</span>
+              <p>Dashboard reporting showed 95% of payroll runs completed on schedule, with the remaining delays traceable to missing documents or newly added employees rather than to tracking failures.</p>
+            </div>
+          </div>
+          <div class="case__panel-side">
+            <div class="donut" data-value="95" role="img" aria-label="95 percent of payroll runs completed on schedule">
+              <svg viewBox="0 0 120 120" aria-hidden="true">
+                <circle class="donut__track" cx="60" cy="60" r="52"/>
+                <circle class="donut__value" cx="60" cy="60" r="52"/>
+              </svg>
+              <span class="donut__num mono"><b>95</b>%</span>
+              <span class="donut__cap mono">Payroll runs on schedule</span>
+            </div>
+            <p class="case__stack mono">Claude Code · Payroll operations · Time-zone logic · 19 locations</p>
+          </div>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <!-- Secondary builds -->
+  <h3 class="subhead mono">Also built</h3>
   <div class="work">
     <article class="card card--work tilt" tabindex="0">
-      <span class="work__no mono">P/01</span>
-      <h3>Live Jira operations dashboard</h3>
-      <p>A single board for every bug and feature request across the platform, sliced by priority, status, module, product and assignee, so developers work the queue by priority instead of by whoever shouted last.</p>
-      <p class="work__impact"><span class="mono">Impact</span> Open tickets down <b>52%</b> — 350 → 168 (Feb–Jun 2026)</p>
-      <p class="work__stack mono">Jira · Dashboard design · Workflow triage</p>
-      <span class="work__org mono">AIO APP</span>
-    </article>
-
-    <article class="card card--work tilt" tabindex="0">
-      <span class="work__no mono">P/02</span>
-      <h3>Multi-restaurant payroll dashboard</h3>
-      <p>Built with Claude Code for 19 restaurants: pay cycles, paydays, approval deadlines, run statuses and time-zone conversions in one view, so nothing depends on remembering which state a location sits in.</p>
-      <p class="work__impact"><span class="mono">Impact</span> <b>95%</b> of payroll runs completed on schedule</p>
-      <p class="work__stack mono">Claude Code · Payroll operations · Time-zone logic</p>
-      <span class="work__org mono">AIO APP</span>
-    </article>
-
-    <article class="card card--work tilt" tabindex="0">
-      <span class="work__no mono">P/03</span>
+      <span class="work__no mono">P/04</span>
       <h3>Live pizza-ordering interface</h3>
-      <p>A real-time visual configurator with dynamic order summaries, designed and developed with product managers and developers, then integrated into the POS platform and shipped to live sites.</p>
+      <p>Real-time visual configuration with dynamic order summaries, designed and developed with product managers and developers, then integrated into the POS platform.</p>
       <p class="work__impact"><span class="mono">Impact</span> Deployed at <b>6 live restaurants</b></p>
       <p class="work__stack mono">POS integration · Interface design · Product collaboration</p>
       <span class="work__org mono">AIO APP</span>
-    </article>
-
-    <article class="card card--work tilt" tabindex="0">
-      <span class="work__no mono">P/04</span>
-      <h3>n8n + Python approval workflow</h3>
-      <p>Replaced a manual approval chain during an ERPNext rollout, with server scripts handling deadlines, reminders, submissions and missing-document checks.</p>
-      <p class="work__impact"><span class="mono">Impact</span> Cycle time <b>40%</b> faster — ~5 hours down to 1–3</p>
-      <p class="work__stack mono">n8n · Python · ERPNext server scripts</p>
-      <span class="work__org mono">OneScreen</span>
     </article>
 
     <article class="card card--work tilt" tabindex="0">
@@ -468,21 +682,27 @@
 
     <article class="card card--work tilt" tabindex="0">
       <span class="work__no mono">P/06</span>
-      <h3>Fibabanka capacity study — capstone</h3>
-      <p>University-approved client project with a six-member team: evaluated server capacity and data-transfer performance, using Arena Simulation, Excel Solver, genetic algorithms and Java heuristics to generate feasible capacity and processing-time scenarios.</p>
-      <p class="work__impact"><span class="mono">Impact</span> Feasible scenarios delivered for operational decisions</p>
-      <p class="work__stack mono">Arena Simulation · Excel Solver · Genetic algorithms · Java</p>
+      <h3>Fibabanka server capacity study</h3>
+      <p>Final-year capstone with a six-member team: evaluated server capacity and data-transfer performance, comparing an exact Excel Solver model against a simple heuristic and a genetic algorithm, plus Arena and Python simulation.</p>
+      <p class="work__impact"><span class="mono">Impact</span> Genetic algorithm lifted capacity utilisation to <b>83%</b> where the simple heuristic reached 76%</p>
+      <p class="work__stack mono">Arena Simulation · Excel Solver · Genetic algorithms · Java · Python</p>
+      <a class="work__link" href="assets/docs/fibabanka-capstone.pdf" target="_blank" rel="noopener">
+        Read the report
+        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M7 17 17 7M9 7h8v8"/>
+        </svg>
+      </a>
       <span class="work__org mono">Özyeğin University · Oct 2023 – May 2024</span>
     </article>
   </div>
 </section>
 
 <!-- ============================================================
-     EDUCATION + CREDENTIALS
+     07 EDUCATION
      ============================================================ -->
 <section class="section" id="education" data-rail="Education">
   <div class="section__head">
-    <span class="tag mono">05 — Foundation</span>
+    <span class="tag mono">07 — Foundation</span>
     <h2 class="h2">Education &amp; credentials</h2>
   </div>
 
@@ -493,8 +713,14 @@
       <p class="edu__school">Özyeğin University</p>
       <ul class="edu__list">
         <li>Awarded a <b>40% scholarship</b>; degree taught entirely in English.</li>
-        <li>Final-year capstone delivered for Fibabanka as a university-approved client project.</li>
+        <li>Final-year capstone delivered for <b>Fibabanka</b> as a university-approved client project, optimising data transfer between two data storage facilities.</li>
       </ul>
+      <a class="btn btn--sm magnetic" href="assets/docs/fibabanka-capstone.pdf" target="_blank" rel="noopener">
+        <span>Read the capstone report</span>
+        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M7 17 17 7M9 7h8v8"/>
+        </svg>
+      </a>
     </article>
 
     <div class="edu__certs">
@@ -510,18 +736,26 @@
 </section>
 
 <!-- ============================================================
-     CONTACT
+     08 CONTACT
      ============================================================ -->
 <section class="section section--contact" id="contact" data-rail="Contact">
   <div class="contact">
-    <span class="tag mono">06 — Contact</span>
+    <span class="tag mono">08 — Contact</span>
     <h2 class="contact__title">Got a system that<br>isn't holding up?</h2>
     <p class="contact__lede">
-      Open to operations, business systems and process improvement roles — remote, on-site in Pakistan,
-      or relocating to Dubai and the wider GCC.
+      Open to operations, business systems and process improvement roles. I work with distributed
+      teams across time zones and I'm happy to walk through any of the work above in detail.
     </p>
 
-    <a class="contact__mail" href="mailto:ftariq377@gmail.com">ftariq377@gmail.com</a>
+    <div class="contact__mailrow">
+      <a class="contact__mail" href="mailto:ftariq377@gmail.com">ftariq377@gmail.com</a>
+      <button class="copy" id="copyMail" data-copy="ftariq377@gmail.com" aria-label="Copy email address">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+          <rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/>
+        </svg>
+        <span class="copy__label mono">Copy</span>
+      </button>
+    </div>
 
     <ul class="contact__links">
       <li>
@@ -529,12 +763,13 @@
           <span class="mono">LinkedIn</span><b>in/faizan-tariq</b>
         </a>
       </li>
+      <!-- GITHUB SLOT — uncomment and swap USERNAME once you have the handle.
       <li>
-        <!-- TODO: replace with your GitHub username, or delete this <li> if you'd rather not link it -->
-        <a class="magnetic" href="https://github.com/your-username" target="_blank" rel="noopener">
-          <span class="mono">GitHub</span><b>your-username</b>
+        <a class="magnetic" href="https://github.com/USERNAME" target="_blank" rel="noopener">
+          <span class="mono">GitHub</span><b>USERNAME</b>
         </a>
       </li>
+      -->
       <li>
         <a class="magnetic" href="tel:+923335566750">
           <span class="mono">Phone</span><b>+92 333 5566750</b>
@@ -556,6 +791,27 @@
   <span class="mono">Islamabad, Pakistan</span>
   <a class="mono" href="#top">Back to top ↑</a>
 </footer>
+
+<!-- ============================================================
+     COMMAND PALETTE — ⌘K / Ctrl+K
+     ============================================================ -->
+<div class="palette" id="palette" hidden>
+  <div class="palette__scrim" data-close></div>
+  <div class="palette__box" role="dialog" aria-modal="true" aria-label="Quick navigation">
+    <div class="palette__field">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
+      </svg>
+      <input type="text" id="paletteInput" placeholder="Jump to a section, or type to search…"
+             autocomplete="off" spellcheck="false" aria-label="Search sections and actions">
+      <kbd class="mono">ESC</kbd>
+    </div>
+    <ul class="palette__list" id="paletteList" role="listbox" aria-label="Results"></ul>
+    <div class="palette__foot mono"><span>↑↓ navigate</span><span>↵ open</span></div>
+  </div>
+</div>
+
+<span class="toast mono" id="toast" role="status" aria-live="polite"></span>
 
 <script src="script.js" defer></script>
 </body>

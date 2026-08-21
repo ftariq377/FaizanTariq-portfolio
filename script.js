@@ -192,13 +192,17 @@
     }
 
     let ry = 0.4, rx = -0.18, targetRx = -0.18, targetRy = 0.4;
-    const pointer = { x: 0, y: 0 };
+    const pointer = { x: 0, y: 0, px: null, py: null };
 
+    let hover = -1;
     if (finePointer && !reduceMotion) {
       window.addEventListener('pointermove', (e) => {
         pointer.x = (e.clientX / window.innerWidth) * 2 - 1;
         pointer.y = (e.clientY / window.innerHeight) * 2 - 1;
         targetRx = -0.18 + pointer.y * 0.22;
+        const rect = canvas.getBoundingClientRect();
+        pointer.px = e.clientX - rect.left;
+        pointer.py = e.clientY - rect.top;
       }, { passive: true });
     }
 
@@ -230,15 +234,31 @@
         };
       }
 
+      // nearest labelled node to the pointer becomes the highlighted one
+      hover = -1;
+      if (pointer.px != null) {
+        let best = 34 * 34;
+        for (let i = 0; i < nodes.length; i++) {
+          if (!nodes[i].label || projected[i].depth < 0.5) continue;
+          const dx = projected[i].x - pointer.px, dy = projected[i].y - pointer.py;
+          const d2 = dx * dx + dy * dy;
+          if (d2 < best) { best = d2; hover = i; }
+        }
+      }
+
       ctx.clearRect(0, 0, w, h);
 
       // Edges first, faded by the depth of their nearest endpoint.
       ctx.lineWidth = 1;
       for (let e = 0; e < edges.length; e++) {
-        const a = projected[edges[e][0]], b = projected[edges[e][1]];
+        const ia = edges[e][0], ib = edges[e][1];
+        const a = projected[ia], b = projected[ib];
         const depth = Math.max(a.depth, b.depth);
         if (depth < 0.18) continue;
-        ctx.strokeStyle = 'rgba(110,140,168,' + (depth * depth * 0.42).toFixed(3) + ')';
+        const touched = hover === ia || hover === ib;
+        ctx.strokeStyle = touched
+          ? 'rgba(255,158,44,' + (depth * 0.75).toFixed(3) + ')'
+          : 'rgba(110,140,168,' + (depth * depth * 0.42).toFixed(3) + ')';
         ctx.beginPath();
         ctx.moveTo(a.x, a.y);
         ctx.lineTo(b.x, b.y);
@@ -271,7 +291,8 @@
         const p = projected[i];
         const n = nodes[i];
         const isNode = !!n.label;
-        const r = (isNode ? 2.6 : 1.3) * p.scale;
+        const lit = i === hover;
+        const r = (isNode ? (lit ? 5 : 2.6) : 1.3) * p.scale;
 
         ctx.fillStyle = isNode
           ? 'rgba(255,158,44,' + (0.3 + p.depth * 0.7).toFixed(3) + ')'
@@ -281,9 +302,11 @@
         ctx.fill();
 
         // Only label the front face, and only when there's room for the text.
-        if (isNode && p.depth > 0.6 && w > 620) {
-          ctx.fillStyle = 'rgba(236,235,230,' + ((p.depth - 0.6) * 1.9).toFixed(3) + ')';
-          ctx.fillText(n.label, p.x + 9 * p.scale, p.y);
+        if (isNode && (lit || (p.depth > 0.6 && w > 620))) {
+          ctx.fillStyle = lit
+            ? '#FF9E2C'
+            : 'rgba(236,235,230,' + ((p.depth - 0.6) * 1.9).toFixed(3) + ')';
+          ctx.fillText(n.label, p.x + (lit ? 12 : 9) * p.scale, p.y);
         }
       }
     }
@@ -329,7 +352,7 @@
 
   /* -- 05 Scroll reveals + hero entrance ---------------------------------- */
   function initReveals() {
-    const targets = $$('.section__head, .tl, .card--work, .edu__main, .edu__certs, .about__body, .about__facts, .skills__grid, .sphere, .reveal')
+    const targets = $$('.section__head, .tl, .card--work, .edu__main, .edu__certs, .about__body, .about__side, .skills__grid, .sphere, .principle, .subhead, .case, .stack, .reveal')
       .filter((el) => !el.closest('.hero'));   // the hero runs its own entrance
     if (reduceMotion) { targets.forEach((t) => t.classList.add('is-in')); return; }
 
@@ -563,6 +586,300 @@
     });
   }
 
+
+  /* -- 10 Case studies -----------------------------------------------------
+     One panel open at a time. Height animates via grid-template-rows 0fr→1fr,
+     so nothing has to be measured and it still works if content reflows.     */
+  function initCases() {
+    const cases = $$('.case');
+    if (!cases.length) return;
+
+    function setOpen(item, open) {
+      item.classList.toggle('is-open', open);
+      $('.case__head', item).setAttribute('aria-expanded', String(open));
+      if (open) paintFigures(item);
+    }
+
+    cases.forEach((item) => {
+      $('.case__head', item).addEventListener('click', () => {
+        const willOpen = !item.classList.contains('is-open');
+        cases.forEach((other) => setOpen(other, false));
+        setOpen(item, willOpen);
+      });
+    });
+
+    // First case ships open; paint its figures once it scrolls into view.
+    const first = cases[0];
+    const io = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return;
+      paintFigures(first);
+      io.disconnect();
+    }, { threshold: 0.2 });
+    io.observe(first);
+  }
+
+  /* Fill the before/after bars and the donut. Idempotent — safe to re-run. */
+  function paintFigures(scope) {
+    $$('.ba', scope).forEach((ba) => {
+      const before = parseFloat(ba.dataset.before);
+      const after = parseFloat(ba.dataset.after);
+      const max = Math.max(before, after);
+      const beforePct = (before / max) * 100;
+      const afterPct = (after / max) * 100;
+      // rAF so the transition has a frame to start from
+      requestAnimationFrame(() => {
+        $('.ba__fill--before', ba).style.width = beforePct + '%';
+        $('.ba__fill--after', ba).style.width = afterPct + '%';
+      });
+    });
+
+    $$('.donut', scope).forEach((donut) => {
+      const value = parseFloat(donut.dataset.value);
+      const ring = $('.donut__value', donut);
+      const circumference = 2 * Math.PI * 52;
+      ring.style.strokeDasharray = circumference;
+      requestAnimationFrame(() => {
+        ring.style.strokeDashoffset = circumference * (1 - value / 100);
+      });
+    });
+  }
+
+  /* -- 11 Command palette (⌘K / Ctrl+K) ------------------------------------ */
+  function initPalette() {
+    const palette = $('#palette');
+    const input = $('#paletteInput');
+    const list = $('#paletteList');
+    const trigger = $('#paletteTrigger');
+    if (!palette) return;
+
+    const ITEMS = [
+      { label: 'Profile', hint: 'Section', run: () => go('#profile') },
+      { label: 'Systems — the stack I run', hint: 'Section', run: () => go('#systems') },
+      { label: 'Approach — how I work', hint: 'Section', run: () => go('#approach') },
+      { label: 'Capability — skills & stack', hint: 'Section', run: () => go('#skills') },
+      { label: 'Experience — track record', hint: 'Section', run: () => go('#experience') },
+      { label: 'Case studies', hint: 'Section', run: () => go('#work') },
+      { label: 'Education & credentials', hint: 'Section', run: () => go('#education') },
+      { label: 'Contact', hint: 'Section', run: () => go('#contact') },
+      { label: 'Download resume (PDF)', hint: 'Action', run: () => open('assets/resume/Faizan-Tariq-Resume.pdf') },
+      { label: 'Read the Fibabanka capstone report', hint: 'Action', run: () => open('assets/docs/fibabanka-capstone.pdf') },
+      { label: 'Email ftariq377@gmail.com', hint: 'Action', run: () => open('mailto:ftariq377@gmail.com') },
+      { label: 'Copy email address', hint: 'Action', run: () => copyText('ftariq377@gmail.com') },
+      { label: 'Open LinkedIn profile', hint: 'Action', run: () => open('https://www.linkedin.com/in/faizan-tariq-59b028254') }
+    ];
+
+    let filtered = ITEMS.slice();
+    let active = 0;
+
+    const go = (hash) => { close(); $(hash).scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' }); };
+    const open = (url) => { close(); window.open(url, url.startsWith('http') ? '_blank' : '_self', 'noopener'); };
+
+    function render() {
+      list.innerHTML = '';
+      if (!filtered.length) {
+        list.innerHTML = '<li class="palette__empty" role="presentation">Nothing matches that.</li>';
+        return;
+      }
+      filtered.forEach((item, i) => {
+        const li = document.createElement('li');
+        li.setAttribute('role', 'option');
+        li.setAttribute('aria-selected', String(i === active));
+        li.innerHTML = item.label + '<span class="mono">' + item.hint + '</span>';
+        li.addEventListener('click', item.run);
+        li.addEventListener('pointermove', () => { active = i; sync(); });
+        list.appendChild(li);
+      });
+    }
+    function sync() {
+      $$('li[role="option"]', list).forEach((li, i) => li.setAttribute('aria-selected', String(i === active)));
+      const current = list.children[active];
+      if (current && current.scrollIntoView) current.scrollIntoView({ block: 'nearest' });
+    }
+    function openPalette() {
+      palette.hidden = false;
+      document.body.classList.add('is-locked');
+      input.value = ''; filtered = ITEMS.slice(); active = 0; render();
+      input.focus();
+    }
+    function close() {
+      palette.hidden = true;
+      document.body.classList.remove('is-locked');
+    }
+
+    input.addEventListener('input', () => {
+      const query = input.value.trim().toLowerCase();
+      filtered = ITEMS.filter((item) => item.label.toLowerCase().includes(query));
+      active = 0; render();
+    });
+
+    palette.addEventListener('click', (e) => { if (e.target.hasAttribute('data-close')) close(); });
+    trigger.addEventListener('click', openPalette);
+
+    document.addEventListener('keydown', (e) => {
+      const combo = (e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k';
+      if (combo) { e.preventDefault(); palette.hidden ? openPalette() : close(); return; }
+      if (palette.hidden) return;
+      if (e.key === 'Escape') { close(); return; }
+      if (e.key === 'ArrowDown') { e.preventDefault(); active = (active + 1) % filtered.length; sync(); }
+      if (e.key === 'ArrowUp') { e.preventDefault(); active = (active - 1 + filtered.length) % filtered.length; sync(); }
+      if (e.key === 'Enter' && filtered[active]) { e.preventDefault(); filtered[active].run(); }
+    });
+  }
+
+  /* -- 12 Copy to clipboard + toast ---------------------------------------- */
+  function toast(message) {
+    const el = $('#toast');
+    el.textContent = message;
+    el.classList.add('is-on');
+    clearTimeout(el._timer);
+    el._timer = setTimeout(() => el.classList.remove('is-on'), 2200);
+  }
+
+  function copyText(text) {
+    const done = () => toast('Copied ' + text);
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(done).catch(() => toast('Copy blocked — the address is ' + text));
+      return;
+    }
+    // http:// fallback (GitHub Pages is https, but local previews may not be)
+    const field = document.createElement('textarea');
+    field.value = text;
+    field.setAttribute('readonly', '');
+    field.style.cssText = 'position:absolute;left:-9999px';
+    document.body.appendChild(field);
+    field.select();
+    try { document.execCommand('copy'); done(); } catch (err) { toast('Copy blocked — the address is ' + text); }
+    document.body.removeChild(field);
+  }
+
+  function initCopy() {
+    const button = $('#copyMail');
+    if (button) button.addEventListener('click', () => copyText(button.dataset.copy));
+  }
+
+
+  /* -- 13 Portrait parallax ------------------------------------------------
+     Four layers at different depths tracked against the pointer. The chips sit
+     shallowest so they travel furthest, which is what sells the depth.        */
+  function initPortrait() {
+    const frame = $('#portrait');
+    if (!frame || reduceMotion || !finePointer) return;
+
+    const layers = [
+      { el: $('.portrait__halo', frame), depth: 8 },
+      { el: $('.portrait__ring', frame), depth: 14 },
+      { el: $('.portrait__arc', frame), depth: 20 },
+      { el: $('picture', frame), depth: 26 }
+    ].filter((l) => l.el);
+
+    let tx = 0, ty = 0, cx = 0, cy = 0, running = false;
+
+    frame.addEventListener('pointermove', (e) => {
+      const r = frame.getBoundingClientRect();
+      tx = (e.clientX - (r.left + r.width / 2)) / (r.width / 2);
+      ty = (e.clientY - (r.top + r.height / 2)) / (r.height / 2);
+      if (!running) { running = true; requestAnimationFrame(loop); }
+    });
+    frame.addEventListener('pointerleave', () => { tx = 0; ty = 0; });
+
+    function loop() {
+      cx = lerp(cx, tx, 0.09);
+      cy = lerp(cy, ty, 0.09);
+      layers.forEach(({ el, depth }) => {
+        el.style.transform =
+          'translate3d(' + (cx * depth).toFixed(1) + 'px,' + (cy * depth * 0.65).toFixed(1) + 'px,0)';
+      });
+      if (Math.abs(cx - tx) > 0.002 || Math.abs(cy - ty) > 0.002) { requestAnimationFrame(loop); }
+      else { running = false; }
+    }
+  }
+
+  /* -- 14 Systems stack -----------------------------------------------------
+     Plates open out as the section scrolls through; legend hover/focus lifts
+     and lights a single layer.                                               */
+  function initStack() {
+    const scene = $('#stackScene');
+    const legend = $('#stackLegend');
+    if (!scene || !legend) return;
+
+    const plates = $$('.plate', scene);
+    // index runs bottom (base) to top so translateZ stacks in the right order
+    plates.slice().reverse().forEach((plate, i) => plate.style.setProperty('--i', i));
+
+    function light(layer) {
+      scene.classList.toggle('is-lit', !!layer);
+      plates.forEach((p) => p.classList.toggle('is-active', p.dataset.layer === layer));
+      $$('button', legend).forEach((b) => b.classList.toggle('is-active', b.dataset.layer === layer));
+    }
+
+    $$('button', legend).forEach((button) => {
+      const layer = button.dataset.layer;
+      ['pointerenter', 'focus'].forEach((evt) => button.addEventListener(evt, () => light(layer)));
+      ['pointerleave', 'blur'].forEach((evt) => button.addEventListener(evt, () => light(null)));
+      button.addEventListener('click', () => light(layer));
+    });
+    legend.addEventListener('pointerleave', () => light(null));
+
+    if (reduceMotion) { scene.style.setProperty('--sep', 1); return; }
+
+    let ticking = false;
+    function update() {
+      const rect = scene.getBoundingClientRect();
+      // 0 while below the fold, 1 once centred
+      const progress = clamp(1 - Math.abs(rect.top + rect.height / 2 - window.innerHeight / 2) / (window.innerHeight * 0.8), 0, 1);
+      scene.style.setProperty('--sep', progress.toFixed(3));
+      ticking = false;
+    }
+    window.addEventListener('scroll', () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(update);
+    }, { passive: true });
+    update();
+  }
+
+  /* -- 15 Approval race ----------------------------------------------------
+     Plays the 5h manual cycle against the 1–3h automated one in real time,
+     compressed to a few seconds. Numbers come straight from the case study.  */
+  function initRace() {
+    const race = $('#race');
+    if (!race) return;
+
+    const button = $('.race__run', race);
+    const manual = { fill: $('.race__fill--manual', race), time: $('[data-lane="manual"]', race), hours: 5 };
+    const auto = { fill: $('.race__fill--auto', race), time: $('[data-lane="auto"]', race), hours: 2 };
+    const DURATION = 2600;   // ms for the slower lane
+
+    function run() {
+      button.disabled = true;
+      const start = performance.now();
+
+      (function tick(now) {
+        const elapsed = now - start;
+        [manual, auto].forEach((lane) => {
+          const laneDuration = DURATION * (lane.hours / manual.hours);
+          const t = clamp(elapsed / laneDuration, 0, 1);
+          lane.fill.style.width = (t * (lane.hours / manual.hours) * 100).toFixed(1) + '%';
+          lane.time.textContent = (t * lane.hours).toFixed(1) + 'h';
+        });
+        if (elapsed < DURATION) { requestAnimationFrame(tick); return; }
+        auto.time.textContent = '1–3h';
+        button.disabled = false;
+        button.lastChild.textContent = ' Run again';
+      })(start);
+    }
+
+    button.addEventListener('click', run);
+
+    // autoplay once when the panel it lives in is opened and visible
+    const io = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting || reduceMotion) return;
+      run();
+      io.disconnect();
+    }, { threshold: 0.5 });
+    io.observe(race);
+  }
+
   /* -- Kick off ------------------------------------------------------------ */
   function main() {
     initNav();
@@ -571,6 +888,12 @@
     initSphere();
     initTimeline();
     initPointer();
+    initCases();
+    initPortrait();
+    initStack();
+    initRace();
+    initPalette();
+    initCopy();
     initGraph();
     boot(heroEntrance);
   }
