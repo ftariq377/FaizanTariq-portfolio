@@ -42,22 +42,24 @@ faizan-tariq-portfolio/
 
 | # | Section | What it does |
 |---|---|---|
-| — | Hero | Live systems graph + headline claim + four impact metrics |
+| — | Hero | Name, title, a one-line value proposition, resume download and four impact metrics, over the live systems graph. Deliberately sparse |
 | 01 | Profile | The story, a parallax portrait, and a scannable facts panel |
-| 02 | In production | Interactive isometric 3D stack of the eight modules kept running in production |
+| 02 | In production | Five capability layers — Core → Operational → Tools → Execution → Impact — on the isometric 3D stack. Every item links to the roles that used it |
 | 03 | Approach | Four operating principles, each tied to a real job |
 | 04 | Capability | Draggable 3D skill sphere + categorised stack |
 | 05 | Experience | Scroll-driven timeline, six roles |
 | 06 | Case studies | Three expandable deep dives (Context → What I did → Result), each with a different figure type, plus three secondary builds |
 | 07 | Education | Degree, capstone link, certificates |
-| 08 | Contact | Email with copy button, links, resume |
+| 08 | Contact | Final CTA — email, copy button, LinkedIn, phone, resume |
 
 ---
 
 ## Interactive features
 
 - **Systems graph (hero)** — ~114 points on a Fibonacci sphere, projected by hand, edges between near neighbours, amber packets travelling along a few of them. Labels are the real systems from the resume. Move the pointer near any labelled node and it lights up along with every edge it touches.
-- **Isometric systems stack** — eight CSS-3D plates that open out as the section scrolls into view. Hovering, tapping or keyboard-focusing a legend entry lifts and isolates that layer.
+- **Capability layers** — five CSS-3D plates that open out as the section scrolls into view. Progressive disclosure: a collapsed row is a single line (number, name, item count), only one layer is open at a time, and opening one lifts and isolates its plate. A "Next —" control walks down the stack, so the section reads *explore → expand → understand → next* rather than presenting everything at once.
+- **Skill → experience evidence** — click any capability, tool or outcome chip and the page dims every role that didn't use it, lights the ones that did, and scrolls to the first match. A banner names what's being shown; Esc or Clear resets. This is what turns the skill list into evidence rather than assertion.
+- **Recruiter mode** — a toggle in the nav (also in ⌘K). Same DOM, same tokens: decoration stands down, every collapsed panel opens, spacing compresses, so the whole record can be skimmed in one pass. It's an addition, not a replacement — one click returns the full experience.
 - **Parallax portrait** — four depth layers (bloom, ground plate, tracing arc, subject) tracked against the pointer, each moving at its own rate.
 - **Approval race** — plays the manual five-hour cycle against the automated one in real time, compressed to a few seconds. Autoplays once when the panel opens, replayable on demand.
 - **Case study accordion** — one panel open at a time; height animates via `grid-template-rows: 0fr → 1fr`, so nothing has to be measured.
@@ -185,8 +187,15 @@ manifest and makes relative paths behave inconsistently.
 ## Content accuracy
 
 Every claim, metric, date, company, tool and credential is taken from Faizan
-Tariq's resume and capstone report. Nothing was invented or inflated. The page
-carries professional information only. Relocation and geographic-availability
+Tariq's resume and capstone report. Nothing was invented or inflated — including
+the skill-to-role links, which only exist where the resume actually places that
+tool or capability in that job.
+
+Marketing is not presented as a professional specialism. Where the resume
+mentions marketing funds, it is retained as what it is — a reimbursement
+category inside financial reporting, not marketing work.
+
+The page carries professional information only. Relocation and geographic-availability
 statements are deliberately absent; factual detail such as past job locations,
 markets served and client base is retained, because that is track record rather
 than a constraint.

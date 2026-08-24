@@ -665,6 +665,7 @@
       { label: 'Read the Fibabanka capstone report', hint: 'Action', run: () => open('assets/docs/fibabanka-capstone.pdf') },
       { label: 'Email ftariq377@gmail.com', hint: 'Action', run: () => open('mailto:ftariq377@gmail.com') },
       { label: 'Copy email address', hint: 'Action', run: () => copyText('ftariq377@gmail.com') },
+      { label: 'Toggle recruiter mode', hint: 'Action', run: () => { close(); window.__setRecruiterMode(!document.body.classList.contains('is-recruiter')); } },
       { label: 'Open LinkedIn profile', hint: 'Action', run: () => open('https://www.linkedin.com/in/faizan-tariq-59b028254') }
     ];
 
@@ -794,38 +795,64 @@
     }
   }
 
-  /* -- 14 Systems stack -----------------------------------------------------
-     Plates open out as the section scrolls through; legend hover/focus lifts
-     and lights a single layer.                                               */
+  /* -- 14 Capability layers -------------------------------------------------
+     The isometric plates stay exactly as they were; what changed is what they
+     represent. Opening a legend layer lifts its plate, and every evidence chip
+     inside links out to the roles where that capability was used.            */
   function initStack() {
     const scene = $('#stackScene');
     const legend = $('#stackLegend');
     if (!scene || !legend) return;
 
     const plates = $$('.plate', scene);
-    // index runs bottom (base) to top so translateZ stacks in the right order
     plates.slice().reverse().forEach((plate, i) => plate.style.setProperty('--i', i));
+
+    const layers = $$('.layer', legend);
 
     function light(layer) {
       scene.classList.toggle('is-lit', !!layer);
       plates.forEach((p) => p.classList.toggle('is-active', p.dataset.layer === layer));
-      $$('button', legend).forEach((b) => b.classList.toggle('is-active', b.dataset.layer === layer));
     }
 
-    $$('button', legend).forEach((button) => {
-      const layer = button.dataset.layer;
-      ['pointerenter', 'focus'].forEach((evt) => button.addEventListener(evt, () => light(layer)));
-      ['pointerleave', 'blur'].forEach((evt) => button.addEventListener(evt, () => light(null)));
-      button.addEventListener('click', () => light(layer));
+    function openLayer(item) {
+      layers.forEach((other) => {
+        const open = other === item;
+        other.classList.toggle('is-open', open);
+        $('.layer__head', other).setAttribute('aria-expanded', String(open));
+      });
+      light(item ? item.dataset.layer : null);
+    }
+
+    layers.forEach((item) => {
+      const head = $('.layer__head', item);
+      head.addEventListener('click', () => openLayer(item.classList.contains('is-open') ? null : item));
+      head.addEventListener('pointerenter', () => light(item.dataset.layer));
+      head.addEventListener('focus', () => light(item.dataset.layer));
+
+      // "Next — ..." walks the recruiter down the stack one layer at a time
+      const next = $('.layer__next', item);
+      if (!next) return;
+      next.addEventListener('click', () => {
+        const target = layers.find((l) => l.dataset.layer === next.dataset.next);
+        if (!target) return;
+        openLayer(target);
+        $('.layer__head', target).scrollIntoView({
+          behavior: reduceMotion ? 'auto' : 'smooth', block: 'center'
+        });
+      });
     });
-    legend.addEventListener('pointerleave', () => light(null));
+    legend.addEventListener('pointerleave', () => {
+      const open = layers.find((l) => l.classList.contains('is-open'));
+      light(open ? open.dataset.layer : null);
+    });
+
+    light('core');
 
     if (reduceMotion) { scene.style.setProperty('--sep', 1); return; }
 
     let ticking = false;
     function update() {
       const rect = scene.getBoundingClientRect();
-      // 0 while below the fold, 1 once centred
       const progress = clamp(1 - Math.abs(rect.top + rect.height / 2 - window.innerHeight / 2) / (window.innerHeight * 0.8), 0, 1);
       scene.style.setProperty('--sep', progress.toFixed(3));
       ticking = false;
@@ -836,6 +863,76 @@
       requestAnimationFrame(update);
     }, { passive: true });
     update();
+  }
+
+  /* -- 14b Skill → experience evidence --------------------------------------
+     Clicking a capability chip dims everything except the roles that actually
+     used it, then takes you there. Turns a skill list into evidence.         */
+  function initEvidence() {
+    const banner = $('#evidence');
+    const label = $('#evidenceLabel');
+    const clear = $('#evidenceClear');
+    if (!banner) return;
+
+    const targets = $$('[data-role-id]');
+
+    function show(name, roles) {
+      document.body.classList.add('is-linked');
+      targets.forEach((el) => el.classList.toggle('is-match', roles.includes(el.dataset.roleId)));
+      label.textContent = name;
+      banner.hidden = false;
+      // a matched role that hasn't been revealed yet should still be readable
+      $$('[data-role-id].is-match').forEach((el) => el.classList.add('is-in'));
+      // land on the first match, not the top of the section
+      const first = $('[data-role-id].is-match');
+      (first || $('#experience')).scrollIntoView({
+        behavior: reduceMotion ? 'auto' : 'smooth',
+        block: 'center'
+      });
+    }
+
+    function reset() {
+      document.body.classList.remove('is-linked');
+      targets.forEach((el) => el.classList.remove('is-match'));
+      banner.hidden = true;
+    }
+
+    $$('.chips--evidence button[data-roles]').forEach((chip) => {
+      chip.addEventListener('click', () => show(chip.textContent.trim(), chip.dataset.roles.split(',')));
+    });
+    clear.addEventListener('click', reset);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && document.body.classList.contains('is-linked')) reset();
+    });
+  }
+
+  /* -- 14c Recruiter mode ----------------------------------------------------
+     Not a different site — the same DOM with decoration stood down and every
+     collapsed panel opened, so the whole record can be skimmed in one pass.  */
+  function initMode() {
+    const toggle = $('#modeToggle');
+    if (!toggle) return;
+
+    function set(on) {
+      document.body.classList.toggle('is-recruiter', on);
+      toggle.setAttribute('aria-pressed', String(on));
+      $('.mode-toggle__text', toggle).textContent = on ? 'Full experience' : 'Recruiter mode';
+      if (on) {
+        $$('.case').forEach((c) => {
+          c.classList.add('is-open');
+          $('.case__head', c).setAttribute('aria-expanded', 'true');
+          paintFigures(c);
+        });
+        $$('.layer').forEach((l) => {
+          l.classList.add('is-open');
+          $('.layer__head', l).setAttribute('aria-expanded', 'true');
+        });
+      }
+      toast(on ? 'Recruiter mode — everything expanded' : 'Full experience restored');
+    }
+
+    toggle.addEventListener('click', () => set(!document.body.classList.contains('is-recruiter')));
+    window.__setRecruiterMode = set;   // used by the command palette
   }
 
   /* -- 15 Approval race ----------------------------------------------------
@@ -891,6 +988,8 @@
     initCases();
     initPortrait();
     initStack();
+    initEvidence();
+    initMode();
     initRace();
     initPalette();
     initCopy();
