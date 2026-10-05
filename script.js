@@ -666,9 +666,9 @@
       { label: 'Case studies', hint: 'Section', run: () => go('#work') },
       { label: 'Education & credentials', hint: 'Section', run: () => go('#education') },
       { label: 'Contact', hint: 'Section', run: () => go('#contact') },
-      { label: 'Download resume — 1 page (PDF)', hint: 'Action', run: () => open('assets/resume/Faizan-Tariq-Resume.pdf') },
-      { label: 'Download CV — 2 pages, UK / Europe (PDF)', hint: 'Action', run: () => open('assets/resume/Faizan-Tariq-CV.pdf') },
-      { label: 'Read the Fibabanka capstone report', hint: 'Action', run: () => (window.__noCapstone ? go('#education') : open('assets/docs/fibabanka-capstone.pdf')) },
+      { label: 'Download resume — 1 page (PDF)', hint: 'Action', run: () => open('Faizan-Tariq-Resume.pdf') },
+      { label: 'Download CV — 2 pages, UK / Europe (PDF)', hint: 'Action', run: () => open('Faizan-Tariq-CV.pdf') },
+      { label: 'Read the Fibabanka capstone report', hint: 'Action', run: () => (window.__noCapstone ? go('#education') : open('fibabanka-capstone.pdf')) },
       { label: 'Email ftariq377@gmail.com', hint: 'Action', run: () => open('mailto:ftariq377@gmail.com') },
       { label: 'Copy email address', hint: 'Action', run: () => copyText('ftariq377@gmail.com') },
       { label: 'Toggle recruiter mode', hint: 'Action', run: () => { close(); window.__setRecruiterMode(!document.body.classList.contains('is-recruiter')); } },
@@ -1239,7 +1239,7 @@
   }
 
   /* -- 19 Capstone link guard ------------------------------------------------
-     If assets/docs/fibabanka-capstone.pdf isn't deployed, hide the links to it
+     If fibabanka-capstone.pdf isn't deployed, hide the links to it
      instead of sending a recruiter to a 404.                                 */
   function initCapstoneGuard() {
     const links = $$('[data-capstone]');
