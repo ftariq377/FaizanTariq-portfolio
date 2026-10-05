@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://your-username.github.io/faizan-tariq-portfolio/sitemap.xml
+Sitemap: https://YOUR-DOMAIN/sitemap.xml

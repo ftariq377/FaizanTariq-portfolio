@@ -14,6 +14,8 @@
    07 Skill sphere (CSS 3D)
    08 Timeline progress
    09 Pointer flourishes: cursor, magnetic buttons, card spotlight
+   10–15 Case studies, palette, copy, portrait, layers, evidence, races
+   16 Fit finder · 17 Go-live pipeline · 18 Guided tour
    ========================================================================== */
 
 (function () {
@@ -135,10 +137,10 @@
     if (!ctx) return;
 
     const LABELS = [
-      'POS', 'Kiosk', 'Digital ordering', 'Menu', 'Payments', 'Payroll', 'Inventory',
-      'Marketing', 'Jira', 'ERPNext', 'n8n', 'Python', 'Excel', 'Shopify', 'Asana',
-      'GoHighLevel', 'Hubstaff', 'Google Sheets', 'Claude Code', 'Arena Simulation',
-      'Excel Solver', 'UAT', 'Data migration', 'Forecasting', 'SOPs', 'KPI reporting'
+      'POS', 'Kiosk', 'Online ordering', 'Menu', 'Payments', 'Payroll', 'Inventory',
+      'Catering', 'KitchenHub', 'DoorDash', 'Uber Eats', 'Grubhub', 'Go-live QA',
+      'Jira', 'ERPNext', 'n8n', 'Python', 'Excel', 'Shopify', 'GitHub',
+      'Claude Code', 'Arena Simulation', 'UAT', 'Data migration', 'Forecasting', 'KPI reporting'
     ];
     const DUST = 88;                       // unlabelled points for depth
     const TOTAL = LABELS.length + DUST;
@@ -422,11 +424,11 @@
 
     // [label, weight] — weight 1 = a tool used daily, 0 = supporting.
     const TAGS = [
-      ['ERPNext', 1], ['Jira', 1], ['POS systems', 1], ['Excel', 1], ['Python', 1],
-      ['n8n', 1], ['Claude Code', 1], ['Sheets', 1], ['Dashboards', 1], ['Forecasting', 1],
-      ['Shopify', 0], ['Asana', 0], ['GoHighLevel', 0], ['Hubstaff', 0], ['UAT', 0],
-      ['XLOOKUP', 0], ['PivotTables', 0], ['SUMIF', 0], ['Arena', 0], ['Solver', 0],
-      ['SOPs', 0], ['KPIs', 0]
+      ['Jira', 1], ['POS systems', 1], ['Excel', 1], ['Claude Code', 1], ['KitchenHub', 1],
+      ['Go-live QA', 1], ['Dashboards', 1], ['ERPNext', 1], ['Python', 1], ['n8n', 1],
+      ['DoorDash', 0], ['Uber Eats', 0], ['Grubhub', 0], ['GitHub', 0], ['Requirements', 0],
+      ['UAT', 0], ['XLOOKUP', 0], ['PivotTables', 0], ['Forecasting', 0], ['Shopify', 0],
+      ['Asana', 0], ['GoHighLevel', 0], ['Hubstaff', 0], ['Arena', 0], ['Solver', 0], ['SOPs', 0]
     ];
 
     const items = TAGS.map(([text, key], i) => {
@@ -653,7 +655,10 @@
     if (!palette) return;
 
     const ITEMS = [
+      { label: 'Play the 60-second tour', hint: 'Action', run: () => { close(); window.__startTour && window.__startTour(); } },
       { label: 'Profile', hint: 'Section', run: () => go('#profile') },
+      { label: 'For recruiters — pick the role you are hiring for', hint: 'Section', run: () => go('#fit') },
+      { label: 'Go-live pipeline — the job, live', hint: 'Section', run: () => go('#pipeline') },
       { label: 'Systems — the stack I run', hint: 'Section', run: () => go('#systems') },
       { label: 'Approach — how I work', hint: 'Section', run: () => go('#approach') },
       { label: 'Capability — skills & stack', hint: 'Section', run: () => go('#skills') },
@@ -661,8 +666,9 @@
       { label: 'Case studies', hint: 'Section', run: () => go('#work') },
       { label: 'Education & credentials', hint: 'Section', run: () => go('#education') },
       { label: 'Contact', hint: 'Section', run: () => go('#contact') },
-      { label: 'Download resume (PDF)', hint: 'Action', run: () => open('assets/resume/Faizan-Tariq-Resume.pdf') },
-      { label: 'Read the Fibabanka capstone report', hint: 'Action', run: () => open('assets/docs/fibabanka-capstone.pdf') },
+      { label: 'Download resume — 1 page (PDF)', hint: 'Action', run: () => open('assets/resume/Faizan-Tariq-Resume.pdf') },
+      { label: 'Download CV — 2 pages, UK / Europe (PDF)', hint: 'Action', run: () => open('assets/resume/Faizan-Tariq-CV.pdf') },
+      { label: 'Read the Fibabanka capstone report', hint: 'Action', run: () => (window.__noCapstone ? go('#education') : open('assets/docs/fibabanka-capstone.pdf')) },
       { label: 'Email ftariq377@gmail.com', hint: 'Action', run: () => open('mailto:ftariq377@gmail.com') },
       { label: 'Copy email address', hint: 'Action', run: () => copyText('ftariq377@gmail.com') },
       { label: 'Toggle recruiter mode', hint: 'Action', run: () => { close(); window.__setRecruiterMode(!document.body.classList.contains('is-recruiter')); } },
@@ -897,6 +903,7 @@
       banner.hidden = true;
     }
 
+    window.__showEvidence = show;   // used by the fit finder
     $$('.chips--evidence button[data-roles]').forEach((chip) => {
       chip.addEventListener('click', () => show(chip.textContent.trim(), chip.dataset.roles.split(',')));
     });
@@ -935,46 +942,311 @@
     window.__setRecruiterMode = set;   // used by the command palette
   }
 
-  /* -- 15 Approval race ----------------------------------------------------
-     Plays the 5h manual cycle against the 1–3h automated one in real time,
-     compressed to a few seconds. Numbers come straight from the case study.  */
+  /* -- 15 Before/after races ----------------------------------------------
+     Any .race element plays its "before" lane against its "after" lane in
+     real time, compressed to a few seconds. Durations come from data-a and
+     data-b (hours); the final labels show the true ranges from the resume.   */
   function initRace() {
-    const race = $('#race');
-    if (!race) return;
+    $$('.race').forEach((race) => {
+      const button = $('.race__run', race);
+      const aHours = parseFloat(race.dataset.a || 5);
+      const bHours = parseFloat(race.dataset.b || 2);
+      const manual = { fill: $('.race__fill--manual', race), time: $('[data-lane="manual"]', race), hours: aHours, final: race.dataset.aFinal };
+      const auto = { fill: $('.race__fill--auto', race), time: $('[data-lane="auto"]', race), hours: bHours, final: race.dataset.bFinal };
+      const DURATION = 2600;
 
-    const button = $('.race__run', race);
-    const manual = { fill: $('.race__fill--manual', race), time: $('[data-lane="manual"]', race), hours: 5 };
-    const auto = { fill: $('.race__fill--auto', race), time: $('[data-lane="auto"]', race), hours: 2 };
-    const DURATION = 2600;   // ms for the slower lane
+      function run() {
+        button.disabled = true;
+        const start = performance.now();
+        (function tick(now) {
+          const elapsed = now - start;
+          [manual, auto].forEach((lane) => {
+            const laneDuration = DURATION * (lane.hours / manual.hours);
+            const t = clamp(elapsed / laneDuration, 0, 1);
+            lane.fill.style.width = (t * (lane.hours / manual.hours) * 100).toFixed(1) + '%';
+            lane.time.textContent = (t * lane.hours).toFixed(1) + 'h';
+          });
+          if (elapsed < DURATION) { requestAnimationFrame(tick); return; }
+          if (manual.final) manual.time.textContent = manual.final;
+          if (auto.final) auto.time.textContent = auto.final;
+          button.disabled = false;
+          button.lastChild.textContent = ' Run again';
+        })(start);
+      }
 
-    function run() {
-      button.disabled = true;
-      const start = performance.now();
+      button.addEventListener('click', run);
+      if (reduceMotion) {
+        manual.fill.style.width = '100%';
+        auto.fill.style.width = (bHours / aHours * 100) + '%';
+        manual.time.textContent = manual.final || aHours + 'h';
+        auto.time.textContent = auto.final || bHours + 'h';
+        return;
+      }
+      const io = new IntersectionObserver(([entry]) => {
+        if (!entry.isIntersecting) return;
+        run();
+        io.disconnect();
+      }, { threshold: 0.5 });
+      io.observe(race);
+    });
+  }
 
-      (function tick(now) {
-        const elapsed = now - start;
-        [manual, auto].forEach((lane) => {
-          const laneDuration = DURATION * (lane.hours / manual.hours);
-          const t = clamp(elapsed / laneDuration, 0, 1);
-          lane.fill.style.width = (t * (lane.hours / manual.hours) * 100).toFixed(1) + '%';
-          lane.time.textContent = (t * lane.hours).toFixed(1) + 'h';
-        });
-        if (elapsed < DURATION) { requestAnimationFrame(tick); return; }
-        auto.time.textContent = '1–3h';
-        button.disabled = false;
-        button.lastChild.textContent = ' Run again';
-      })(start);
+  /* -- 16 Fit finder ---------------------------------------------------------
+     A recruiter picks the role they're hiring for; the card swaps in the three
+     strongest matching proof points, the relevant tools, and a 30-second
+     summary they can copy. Every figure is from the resume — nothing new.     */
+  const FIT = {
+    ops: {
+      title: 'Operations Analyst', roles: ['aio', 'skilledforce', 'coopable'],
+      proof: [['50–60% → 95%', 'On-time payroll across 19 restaurants, via a web-based dashboard with automated alerts.'],
+              ['320 → 208', 'Open support tickets after a Jira dashboard segmented the backlog by priority, module and assignee.'],
+              ['+32%', 'Tasks completed per week after introducing workload allocation and KPI tracking for a 10-person team.']],
+      tools: 'Excel (Advanced) · Jira (Advanced) · Dashboards · KPI reporting',
+      pitch: 'Faizan Tariq is a Senior Operations Associate in U.S. restaurant tech who builds the tracking that keeps operations on time: on-time payroll from 50–60% to 95%, open tickets down 35%, and 32% more tasks completed per week in a team he managed.'
+    },
+    impl: {
+      title: 'Implementation Specialist', roles: ['aio', 'onescreen'],
+      proof: [['6–7 / week', 'New restaurants taken from post-onboarding to go-live, each in 2–3 weeks, leading a four-person team.'],
+              ['12 live', 'Restaurants taken live so far — zero churned.'],
+              ['End to end', 'Pre-launch QA across POS, kiosks, online ordering and KitchenHub; ERPNext rollout with data migration, UAT and user training.']],
+      tools: 'POS & kiosks · KitchenHub · DoorDash · Uber Eats · Grubhub · ERPNext · UAT',
+      pitch: 'Faizan Tariq owns restaurant go-lives at a U.S. restaurant-tech platform: 6–7 new accounts a week across menu, payroll, POS, kiosks and DoorDash, Uber Eats and Grubhub, live in 2–3 weeks, with 12 taken live and zero churn. He also supported an ERPNext rollout through migration, UAT and training.'
+    },
+    ba: {
+      title: 'Business / Systems Analyst', roles: ['aio', 'onescreen'],
+      proof: [['Lead', 'Requirements for a new Catering Module: U.S. market research, feature documentation and module structure with product managers.'],
+              ['6–7h → 2–4h', 'Menu creation time after his use-case research and feature requests drove a full menu-tool revamp.'],
+              ['UAT', 'Data migration, user acceptance testing and server-script configuration on a production ERPNext rollout.']],
+      tools: 'Requirements gathering · Process mapping · UAT · Jira (Advanced) · ERPNext',
+      pitch: 'Faizan Tariq turns operational problems into product requirements: he leads requirements for a new Catering Module, wrote the feature requests that cut menu creation from 6–7 to 2–4 hours, and ran migration and UAT on a production ERPNext rollout.'
+    },
+    menu: {
+      title: 'Product & Menu Operations', roles: ['aio'],
+      proof: [['6–7h → 2–4h', 'Average menu creation time after the menu-manager revamp he drove through feature requests.'],
+              ['3 → 12', 'Pizza clients after the pizza-ordering interface he designed and coded went live across POS, kiosk and online ordering.'],
+              ['0 churn', 'Across 12 go-lives — including fixing menu issues on accounts that showed churn risk.']],
+      tools: 'Menu operations · POS & kiosks · Online ordering · Feature requests · Claude Code',
+      pitch: 'Faizan Tariq works where menus meet the product: he drove a menu-tool revamp that cut setup from 6–7 to 2–4 hours, built a pizza-ordering interface after which pizza clients grew from 3 to 12, and has kept all 12 restaurants he took live.'
+    },
+    pi: {
+      title: 'Process Improvement', roles: ['onescreen', 'aio', 'skilledforce'],
+      proof: [['5h → 1–3h', 'Approval cycle time after an n8n and Python workflow automation.'],
+              ['50–60% → 95%', 'On-time payroll once deadlines and alerts were centralised in one dashboard.'],
+              ['−15%', 'Departmental operating expenses after removing redundant software and tightening budgets.']],
+      tools: 'n8n · Python · Dashboards · Excel (Advanced) · SOPs',
+      pitch: 'Faizan Tariq is an Industrial Engineering graduate who finds where time is lost and automates it out: approvals from five hours to one to three, on-time payroll from 50–60% to 95%, and department costs down 15%.'
+    },
+    sc: {
+      title: 'Supply Chain Analyst', roles: ['onescreen', 'coopable', 'capstone'],
+      proof: [['95%', 'On-time delivery across five regional vendors, alongside Shopify catalogue management for U.S. ordering.'],
+              ['ERPNext', 'Production rollout for five supply chain users covering inventory, stock, shipping and tracking.'],
+              ['Forecasts', 'Monthly and quarterly claims forecasts for 350 dealerships; Transportation & Logistics specialisation.']],
+      tools: 'ERPNext · Inventory & stock · Vendor coordination · Forecasting · Excel (Advanced)',
+      pitch: 'Faizan Tariq brings supply chain systems experience — an ERPNext rollout across inventory, stock and shipping and five regional vendors at 95% on-time delivery — plus daily reporting and forecasting for 350 U.S. dealerships and a Transportation & Logistics specialisation.'
+    }
+  };
+
+  function initFit() {
+    const tabs = $$('#fitRoles [data-fit]');
+    if (!tabs.length) return;
+    let current = 'ops';
+    const card = $('#fitCard');
+
+    function render(key) {
+      const d = FIT[key]; if (!d) return;
+      current = key;
+      tabs.forEach((t) => t.setAttribute('aria-selected', String(t.dataset.fit === key)));
+      card.classList.remove('is-swap'); void card.offsetWidth; card.classList.add('is-swap');
+      $('#fitTitle').textContent = d.title;
+      const list = $('#fitProof'); list.innerHTML = '';
+      d.proof.forEach(([big, text]) => {
+        const li = document.createElement('li');
+        const b = document.createElement('b'); b.textContent = big;
+        const s = document.createElement('span'); s.textContent = text;
+        li.append(b, s); list.appendChild(li);
+      });
+      $('#fitTools').textContent = d.tools;
+      $('#fitPitch').textContent = d.pitch;
     }
 
-    button.addEventListener('click', run);
+    tabs.forEach((t) => {
+      t.addEventListener('click', () => render(t.dataset.fit));
+      t.addEventListener('keydown', (e) => {
+        if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+        const i = tabs.indexOf(t) + (e.key === 'ArrowRight' ? 1 : -1);
+        const next = tabs[(i + tabs.length) % tabs.length];
+        next.focus(); render(next.dataset.fit);
+      });
+    });
+    $('#fitCopy').addEventListener('click', () => {
+      const d = FIT[current];
+      copyText(d.pitch + ' Contact: ftariq377@gmail.com · linkedin.com/in/faizan-tariq-59b028254');
+    });
+    $('#fitShow').addEventListener('click', () => {
+      const d = FIT[current];
+      if (window.__showEvidence) window.__showEvidence(d.title, d.roles);
+    });
+  }
 
-    // autoplay once when the panel it lives in is opened and visible
+  /* -- 17 Go-live pipeline ---------------------------------------------------
+     Restaurant tokens travel through the six stages; each one that reaches
+     "Live" lights a cell on the board until all twelve real go-lives are lit.
+     The flow is an illustration; the totals (12 live, 0 churned) are real.   */
+  function initPipeline() {
+    const track = $('#pipeTrack');
+    const board = $('#pipeBoard');
+    const counter = $('#pipeLive');
+    const replay = $('#pipeReplay');
+    if (!track || !board) return;
+
+    const TOTAL = 12;
+    board.innerHTML = '';
+    const cells = Array.from({ length: TOTAL }, () => {
+      const c = document.createElement('i'); board.appendChild(c); return c;
+    });
+    let timers = [], running = false;
+
+    function finalState() {
+      cells.forEach((c) => c.classList.add('is-on'));
+      counter.textContent = TOTAL;
+    }
+    if (reduceMotion) { finalState(); replay.hidden = true; return; }
+
+    function clear() {
+      timers.forEach(clearTimeout); timers = [];
+      $$('.pipe__token', track).forEach((t) => t.remove());
+      cells.forEach((c) => c.classList.remove('is-on'));
+      counter.textContent = '0';
+    }
+
+    function run() {
+      if (running) return;
+      running = true; clear();
+      let landed = 0;
+      for (let i = 0; i < TOTAL; i++) {
+        timers.push(setTimeout(() => {
+          const tok = document.createElement('span');
+          tok.className = 'pipe__token';
+          tok.style.setProperty('--lane', String(i % 4));
+          tok.textContent = 'R' + String(i + 1).padStart(2, '0');
+          track.appendChild(tok);
+          tok.style.setProperty('--dist', Math.max(0, board.offsetLeft - tok.offsetWidth - 16) + 'px');
+          requestAnimationFrame(() => requestAnimationFrame(() => tok.classList.add('is-going')));
+          tok.addEventListener('transitionend', () => {
+            tok.remove();
+            cells[landed].classList.add('is-on');
+            landed += 1;
+            counter.textContent = landed;
+            if (landed === TOTAL) running = false;
+          }, { once: true });
+        }, i * 420));
+      }
+    }
+
+    replay.addEventListener('click', () => { running = false; run(); });
     const io = new IntersectionObserver(([entry]) => {
-      if (!entry.isIntersecting || reduceMotion) return;
-      run();
-      io.disconnect();
-    }, { threshold: 0.5 });
-    io.observe(race);
+      if (!entry.isIntersecting) return;
+      run(); io.disconnect();
+    }, { threshold: 0.35 });
+    io.observe(track);
+  }
+
+  /* -- 18 Guided tour ----------------------------------------------------------
+     Six stops, ten seconds each: a spotlight lands on each section with one
+     sentence of narration. Pause, step, or Esc out at any time.              */
+  function initTour() {
+    const tour = $('#tour');
+    const spot = $('#tourSpot');
+    const text = $('#tourText');
+    const step = $('#tourStep');
+    const prog = $('#tourProg');
+    const pauseBtn = $('#tourPause');
+    if (!tour) return;
+
+    const STEPS = [
+      ['.hero__stats', 'Senior Operations Associate in U.S. restaurant tech. Twelve restaurants taken live with zero churn, and payroll now on time 95% of runs, up from 50–60%.'],
+      ['#fit .fit', 'Hiring for a specific role? Pick it here — the page pulls the matching proof and writes a 30-second summary you can copy.'],
+      ['#pipe', 'This is the job: 6–7 new restaurants a week, each live in 2–3 weeks, QA’d across POS, kiosks, online ordering and delivery platforms.'],
+      ['#cases', 'Five problems with real before-and-after numbers: tickets 320 → 208, payroll 50–60% → 95%, menu setup 6–7h → 2–4h, approvals 5h → 1–3h.'],
+      ['#timeline', 'Six employers across the U.S., Türkiye and Pakistan — promoted at AIO App within ten months.'],
+      ['#contact', 'Resume, email and LinkedIn are all here. Thanks for the minute.']
+    ];
+    const STEP_MS = 10000;
+    let i = 0, paused = false, startedAt = 0, elapsedBefore = 0, raf = 0;
+
+    function target() { return $(STEPS[i][0]); }
+    function place() {
+      const el = target(); if (!el) return;
+      const r = el.getBoundingClientRect();
+      const pad = 12;
+      spot.style.transform = 'translate(' + (r.left - pad) + 'px,' + (r.top - pad) + 'px)';
+      spot.style.width = (r.width + pad * 2) + 'px';
+      spot.style.height = Math.min(r.height + pad * 2, window.innerHeight * 0.8) + 'px';
+    }
+    function show(n) {
+      i = clamp(n, 0, STEPS.length - 1);
+      step.textContent = (i + 1) + ' / ' + STEPS.length;
+      text.textContent = STEPS[i][1];
+      $('#tourNext').textContent = i === STEPS.length - 1 ? 'Finish' : 'Next';
+      const el = target();
+      if (el) {
+        const top = el.getBoundingClientRect().top + window.scrollY - 96;
+        window.scrollTo({ top: Math.max(0, top), behavior: reduceMotion ? 'auto' : 'smooth' });
+      }
+      elapsedBefore = 0; startedAt = performance.now();
+      setTimeout(place, reduceMotion ? 0 : 450);
+    }
+    function loop(now) {
+      if (tour.hidden) return;
+      place();
+      if (!paused) {
+        const t = elapsedBefore + (now - startedAt);
+        prog.style.width = clamp(t / STEP_MS, 0, 1) * 100 + '%';
+        if (t >= STEP_MS) { if (i < STEPS.length - 1) show(i + 1); else { end(); return; } }
+      }
+      raf = requestAnimationFrame(loop);
+    }
+    function start() {
+      if (document.body.classList.contains('is-recruiter') && window.__setRecruiterMode) window.__setRecruiterMode(false);
+      tour.hidden = false; document.body.classList.add('is-touring');
+      paused = false; pauseBtn.textContent = 'Pause';
+      show(0); cancelAnimationFrame(raf); raf = requestAnimationFrame(loop);
+      $('#tourNext').focus({ preventScroll: true });
+    }
+    function end() {
+      tour.hidden = true; document.body.classList.remove('is-touring');
+      cancelAnimationFrame(raf);
+    }
+    function togglePause() {
+      paused = !paused;
+      if (paused) { elapsedBefore += performance.now() - startedAt; pauseBtn.textContent = 'Play'; }
+      else { startedAt = performance.now(); pauseBtn.textContent = 'Pause'; }
+    }
+
+    $('#tourStart').addEventListener('click', start);
+    $('#tourNext').addEventListener('click', () => (i < STEPS.length - 1 ? show(i + 1) : end()));
+    $('#tourPrev').addEventListener('click', () => show(i - 1));
+    pauseBtn.addEventListener('click', togglePause);
+    $('#tourClose').addEventListener('click', end);
+    document.addEventListener('keydown', (e) => {
+      if (tour.hidden) return;
+      if (e.key === 'Escape') end();
+      if (e.key === 'ArrowRight') { i < STEPS.length - 1 ? show(i + 1) : end(); }
+      if (e.key === 'ArrowLeft') show(i - 1);
+    });
+    window.addEventListener('resize', () => { if (!tour.hidden) place(); }, { passive: true });
+    window.__startTour = start;
+  }
+
+  /* -- 19 Capstone link guard ------------------------------------------------
+     If assets/docs/fibabanka-capstone.pdf isn't deployed, hide the links to it
+     instead of sending a recruiter to a 404.                                 */
+  function initCapstoneGuard() {
+    const links = $$('[data-capstone]');
+    if (!links.length || location.protocol === 'file:') return;
+    fetch(links[0].getAttribute('href'), { method: 'HEAD' })
+      .then((r) => { if (!r.ok) { links.forEach((a) => { a.hidden = true; }); window.__noCapstone = true; } })
+      .catch(() => {});
   }
 
   /* -- Kick off ------------------------------------------------------------ */
@@ -991,6 +1263,10 @@
     initEvidence();
     initMode();
     initRace();
+    initFit();
+    initPipeline();
+    initTour();
+    initCapstoneGuard();
     initPalette();
     initCopy();
     initGraph();
